@@ -1,16 +1,22 @@
-from comunidadetecnologica  import database
+from comunidadetecnologica import database, login_manager
 from datetime import datetime
+from flask_login import UserMixin
 
 
-class Usuario(database.Model):
+@login_manager.user_loader
+def load_usuario(id_usuario):
+    return Usuario.query.get(int(id_usuario))
+
+
+class Usuario(database.Model,UserMixin):
     id = database.Column(database.Integer, primary_key=True)
-    username = database.Column(database.Integer, nullable=False)
+    username = database.Column(database.String, nullable=False)
     email = database.Column(database.String, nullable=False, unique=True)
     senha = database.Column(database.String, nullable=False)
     foto_perfil = database.Column(database.String, default='default.jpg')
     posts = database.relationship('Post', backref='autor', lazy=True)
     cursos = database.Column(
-        database.String, nullable=False, default='não informado')
+        database.String, nullable=False, default='Não Informado')
 
 
 class Post(database.Model):
@@ -18,6 +24,6 @@ class Post(database.Model):
     titulo = database.Column(database.String, nullable=False)
     corpo = database.Column(database.Text, nullable=False)
     data_criacao = database.Column(
-        database.DateTime, nullabe=False, default=datetime.utcnow())
+        database.DateTime, nullable=False, default=datetime.utcnow)
     id_usuario = database.Column(
         database.Integer, database.ForeignKey('usuario.id'), nullable=False)

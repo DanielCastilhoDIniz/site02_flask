@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from comunidadetecnologica.models import Usuario
 
 
 class FormCriarConta(FlaskForm):
@@ -10,6 +11,13 @@ class FormCriarConta(FlaskForm):
     confirmacao_senha = PasswordField('Confirmar senha', validators=[
         DataRequired(), EqualTo('senha')])
     button_submit_criarconta = SubmitField('Criar conta')
+
+    def validate_email(self, email):
+        usuario = Usuario.query.filter_by(email=email.data).first()
+        if usuario:
+            raise ValidationError('E-mail já cadastrado. Cadastre-se com outro e-mail ou faça login para continuar.')
+
+        
 
 
 class FormLogin(FlaskForm):
