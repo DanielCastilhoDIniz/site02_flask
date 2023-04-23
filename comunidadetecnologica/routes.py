@@ -3,7 +3,7 @@ from comunidadetecnologica import app, database
 from comunidadetecnologica import bcrypt
 from comunidadetecnologica.forms import FormLogin, FormCriarConta
 from comunidadetecnologica.models import Usuario
-from flask_login import login_user
+from flask_login import login_user, logout_user, current_user, login_required
 
 
 lista_usuarios = ['Lira', 'João', 'Alon', 'Alessandra', 'Amanda']
@@ -20,6 +20,7 @@ def contato():
 
 
 @app.route('/usuarios')
+@login_required
 def usuarios():
     return render_template('usuarios.html', lista_usuarios=lista_usuarios)
 
@@ -34,7 +35,11 @@ def login():
             login_user(usuario, remember=form_login.lembrar_dados.data)
             flash(
                 f'Login feito com sucesso no e-mail: {form_login.email.data}', 'alert-success')
-            return redirect(url_for('home'))
+            par_next = request.args.get('next')
+            if par_next:
+                return redirect(par_next)
+            else:
+                return redirect(url_for('home'))
         else:
             flash(
                 f'Falha no login, E-mail ou senha incorretos!: {form_login.email.data}', 'alert-danger')
@@ -51,3 +56,26 @@ def login():
 
         return redirect(url_for('home'))
     return render_template('login.html', form_login=form_login, form_criarconta=form_criarconta)
+
+
+@app.route('/sair')
+@login_required
+def sair():
+    logout_user()
+    flash('Logout feito com sucesso', 'alert-seccess')
+    return redirect(url_for('home'))
+
+
+@app.route('/perfil')
+@login_required
+def perfil():
+    return render_template('perfil.html')
+
+
+@app.route('/post/criar')
+@login_required
+def criarpost():
+    return render_template('criarpost.html')
+
+
+
