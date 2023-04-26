@@ -30,12 +30,12 @@ class FormLogin(FlaskForm):
 class FormEiditarPerfil(FlaskForm):
     username = StringField('Nome de Usuário', validators=[DataRequired()])
     email = StringField('E-mail', validators=[DataRequired(), Email()])
-    foto_perfil =FileField('Atualizar foto de perfil', validators=[FileAllowed(['jpg','png'])])
+    foto_perfil =FileField('Atualizar foto de perfil ', validators=[FileAllowed(['jpg','png','jpeg'])])
     button_submit_editarperfil = SubmitField('Confirmar edição')
 
     def validate_email(self, email):
         if current_user.email != email.data:
             usuario = Usuario.query.filter_by(email=email.data).first()
-        if usuario:
-            raise ValidationError(
-                'Já existe um usuario com esse email. Cadastre-se com outro e-mail para continuar.')
+            if usuario:
+                raise ValidationError(
+                    'Já existe um usuario com esse email. Cadastre-se com outro e-mail para continuar.')
