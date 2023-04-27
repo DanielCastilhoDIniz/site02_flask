@@ -1,8 +1,8 @@
 from flask import render_template, redirect, url_for, flash, request
 from comunidadetecnologica import app, database
 from comunidadetecnologica import bcrypt
-from comunidadetecnologica.forms import FormLogin, FormCriarConta, FormEiditarPerfil
-from comunidadetecnologica.models import Usuario
+from comunidadetecnologica.forms import FormLogin, FormCriarConta, FormEiditarPerfil, FormCriarPost
+from comunidadetecnologica.models import Usuario, Post
 from flask_login import login_user, logout_user, current_user, login_required
 import secrets
 import os
@@ -75,10 +75,17 @@ def perfil():
     return render_template('perfil.html', foto_perfil=foto_perfil)
 
 
-@app.route('/post/criar')
+@app.route('/post/criar', methods=['GET','POST'])
 @login_required
 def criarpost():
-    return render_template('criarpost.html')
+    form = FormCriarPost()
+    if form.validate_on_submit():
+        post = Post(titulo=form.titulo.data, corpo=form.corpo.data, autor=current_user)
+        database.session.add(post)
+        database.session.commit()
+        flash('Post criado com sucesso', 'alert-success')
+        return redirect(url_for('home'))
+    return render_template('criarpost.html', form=form)
 
 
 def salvar_imagem(imagem):
