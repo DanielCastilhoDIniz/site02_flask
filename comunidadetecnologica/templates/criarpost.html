@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 
 {% block body %}
-
-
     <div class="container">
         <hr>
         <div class="row">
@@ -11,12 +9,11 @@
                     {{ form.csrf_token }}
                     <legend>Criar Post</legend>
                     <fieldset>
+
                         <div class="form-group mt-2">
                             {{ form.titulo.label(class="form-control-label") }}
-                            
                             {% if form.titulo.errors %}
                                 {{form.titulo(class="form-control is-invalid")}}
-
                                 <div class="invalid-feedback">
                                 {% for erro in form.errors %}
                                     {{erro}}
@@ -32,7 +29,6 @@
                             
                             {% if form.corpo.errors %}
                                 {{form.corpo(class="form-control is-invalid")}}
-
                                 <div class="invalid-feedback">
                                 {% for erro in form.errors %}
                                     {{erro}}
@@ -41,7 +37,8 @@
                             {% else %}
                                 {{form.corpo(class="form-control")}}
                             {%endif%}
-                        </div>         
+                        </div> 
+                                
                     </fieldset>
                     {{ form.button_submit(class="btn btn-primary mt-2") }}
                 </form>  
