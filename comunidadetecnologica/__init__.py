@@ -22,9 +22,10 @@ from comunidadetecnologica import models
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 
 if not engine.has_table("usuario"):
-    database.drop_all()
-    database.create_all()
-    print("base de dados criada")
+    with app.app_context():
+        database.drop_all()
+        database.create_all()
+        print("base de dados criada")
 else:
     print("base de dados já existente")
 
