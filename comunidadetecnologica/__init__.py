@@ -21,7 +21,7 @@ login_manager.login_message_category = 'alert-info'
 from comunidadetecnologica import models
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
 
-if not engine.dialect.has_table("usuario"):
+if not engine.dialect.has_table(table_name="usuario"):
     with app.app_context():
         database.drop_all()
         database.create_all()
