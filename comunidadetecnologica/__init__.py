@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 import os
-from sqlalchemy import create_engine
+import sqlalchemy
 
 app = Flask(__name__)
 
@@ -20,8 +20,8 @@ login_manager.login_message_category = 'alert-info'
 
 from comunidadetecnologica import models
 engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
-
-if not engine.dialect.has_table():
+inspection = sqlalchemy.inspect(engine)
+if not sqlalchemy.engine.reflection.Inspector.has_table(inspection, "usuario"):
     with app.app_context():
         database.drop_all()
         database.create_all()
