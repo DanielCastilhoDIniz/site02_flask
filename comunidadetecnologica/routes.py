@@ -48,7 +48,7 @@ def login():
 
     if form_criarconta.validate_on_submit() and 'button_submit_criarconta' in request.form:
         senha_cript = bcrypt.generate_password_hash(
-            form_criarconta.senha.data)  # criptografia da senha
+            form_criarconta.senha.data).decode('utf-8')  # criptografia da senha
         flash(
             f'Conta criada para o e-mail: {form_criarconta.email.data}', 'alert-success')
         usuario = Usuario(username=form_criarconta.username.data,
