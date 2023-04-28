@@ -76,12 +76,13 @@ def perfil():
     return render_template('perfil.html', foto_perfil=foto_perfil)
 
 
-@app.route('/post/criar', methods=['GET','POST'])
+@app.route('/post/criar', methods=['GET', 'POST'])
 @login_required
 def criarpost():
     form = FormCriarPost()
     if form.validate_on_submit():
-        post = Post(titulo=form.titulo.data, corpo=form.corpo.data, autor=current_user)
+        post = Post(titulo=form.titulo.data,
+                    corpo=form.corpo.data, autor=current_user)
         database.session.add(post)
         database.session.commit()
         flash('Post criado com sucesso', 'alert-success')
@@ -101,14 +102,14 @@ def salvar_imagem(imagem):
     imagem_reduzida.save(caminho_completo)
     return nome_arquivo
 
+
 def atualizar_cursos(form):
     lista_cursos = []
     for campo in form:
         if 'curso_' in campo.name:
             if campo.data:
                 lista_cursos.append(campo.label.text)
-    return ';'.join( lista_cursos)
-
+    return ';'.join(lista_cursos)
 
 
 @app.route('/perfil/editar', methods=['GET', 'POST'])
@@ -121,7 +122,7 @@ def editar_perfil():
         if form.foto_perfil.data:
             nome_imagem = salvar_imagem(form.foto_perfil.data)
             current_user.foto_perfil = nome_imagem
-        
+
         current_user.cursos = atualizar_cursos(form)
         database.session.commit()
         flash('Perfil atualizado com sucesso', 'alert-success')
@@ -134,7 +135,7 @@ def editar_perfil():
     return render_template('editarperfil.html', foto_perfil=foto_perfil, form=form)
 
 
-@app.route('/post/<post_id>', methods=['GET','POST'])
+@app.route('/post/<post_id>', methods=['GET', 'POST'])
 def exibir_post(post_id):
     post = Post.query.get(post_id)
     if current_user == post.autor:
@@ -152,6 +153,7 @@ def exibir_post(post_id):
         form = None
     return render_template('post.html', post=post, form=form)
 
+
 @app.route('/post/<post_id>/excluir', methods=['GET', 'POST', 'DELETE'])
 @login_required
 def excluir_post(post_id):
@@ -163,5 +165,3 @@ def excluir_post(post_id):
         return redirect(url_for('home'))
     else:
         abort(403)
-        
-
